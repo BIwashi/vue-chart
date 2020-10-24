@@ -18,8 +18,21 @@ $ source [newenvname]/bin/activate
 $ pip freeze
 ```
 
-## Detactive
+## Deactivate
 
 ```zsh
-$ detective
+$ deactivate
+```
+---
+# Blueprints
+
+[qiita-Flaskのディレクトリ構成について考えてみたらBlueprintsを試していた話](https://qiita.com/rarewin/items/8f252313db8ee7fa2de0)
+
+## flask起動
+
+```zsh
+$ export FLASK_APP=hoge
+$ export FLASK_DEBUG=true
+# vue-chartで実行
+$ python3 -m flask run
 ```
