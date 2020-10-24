@@ -23,5 +23,3 @@ $ pip freeze
 ```zsh
 $ detective
 ```
-
-
