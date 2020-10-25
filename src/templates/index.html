@@ -11,19 +11,25 @@
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <!-- axios -->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- Foundation -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.3.1/css/foundation.min.css">
 </head>
 
 <body>
     <div id="app" style="width:600px">
         <p><button @click="displayGraph">グラフ表示</button></p>
         <canvas id="myChart"></canvas>
+        <h1>{{ timeWight }}</h1>
+        <h2>Test2</h2>
+        <h3>Test3</h3>
     </div>
     <script>
         var app = new Vue({
             el: '#app',
             data: {
-                labels: ['2019年1月', '2019年2月', '2019年3月', '2019年4月'],
-                data: [120, 190, 34, 58]
+                timeWight: [],
+                time: [],
+                weight: []
             },
             methods: {
                 displayGraph: function () {
@@ -31,16 +37,31 @@
                     var myChart = new Chart(ctx, {
                         type: 'line',
                         data: {
-                            labels: this.labels,
+                            labels: this.time,
                             datasets: [{
                                 label: '四半期の売上数の遷移',
-                                data: this.data
+                                data: this.weight
                             }]
                         }
                     });
                 }
+            },
+            mounted: function () {
+                axios
+                    .get('api/csv')
+                    .then(response => {
+                        this.timeWight = response.data
+                    })
+                    .catch(response => console.log(response))
+                var json = this.timeWight
+                for (var item in json) {
+                    console.log(item + ': ' + json[item]['time'])
+                    this.time.push('a')
+                }
+                this.time.push(json['time'])
+                this.displayGraph();
             }
-        });
+        })
     </script>
 </body>
 
