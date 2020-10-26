@@ -53,9 +53,9 @@
                         this.timeWight = response.data
                         this.time_array = [...response.data].map(value => value.time) // スプレッド演算子 + map()関数
                         this.weight_array = [...response.data].map(value => value.weight) // http://www.art-side.com/archives/579
+                        this.displayGraph(); // このメソッドを各場所はここ
                     })
                     .catch(response => console.log(response))
-                this.displayGraph();
             }
         })
     </script>

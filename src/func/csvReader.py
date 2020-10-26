@@ -17,8 +17,8 @@ def csvReader():
     json_data = {}
     print([os.path.basename(p) for p in glob.glob('../data/*.csv', recursive=True)
            if os.path.isfile(p)])
-
-    with open('../data/testfile.csv', 'r') as f:
+    filepath = '../data/test001.csv'
+    with open(filepath, 'r') as f:
         # list of dictの作成
         for line in csv.DictReader(f):
             json_list.append(line)
