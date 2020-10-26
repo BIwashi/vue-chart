@@ -19,17 +19,17 @@
     <div id="app" style="width:600px">
         <p><button @click="displayGraph">グラフ表示</button></p>
         <canvas id="myChart"></canvas>
-        <h1>{{ timeWight }}</h1>
+        <!-- <h1>{{timeWight}}</h1>
         <h2>Test2</h2>
-        <h3>Test3</h3>
+        <h3>Test3</h3> -->
     </div>
     <script>
         var app = new Vue({
             el: '#app',
             data: {
                 timeWight: [],
-                time: [],
-                weight: []
+                time_array: [],
+                weight_array: []
             },
             methods: {
                 displayGraph: function () {
@@ -37,10 +37,10 @@
                     var myChart = new Chart(ctx, {
                         type: 'line',
                         data: {
-                            labels: this.time,
+                            labels: this.time_array,
                             datasets: [{
-                                label: '四半期の売上数の遷移',
-                                data: this.weight
+                                label: '実験データ',
+                                data: this.weight_array
                             }]
                         }
                     });
@@ -51,14 +51,10 @@
                     .get('api/csv')
                     .then(response => {
                         this.timeWight = response.data
+                        this.time_array = [...response.data].map(value => value.time) // スプレッド演算子 + map()関数
+                        this.weight_array = [...response.data].map(value => value.weight) // http://www.art-side.com/archives/579
                     })
                     .catch(response => console.log(response))
-                var json = this.timeWight
-                for (var item in json) {
-                    console.log(item + ': ' + json[item]['time'])
-                    this.time.push('a')
-                }
-                this.time.push(json['time'])
                 this.displayGraph();
             }
         })
