@@ -16,9 +16,9 @@
 </head>
 
 <body>
-    <div id="app" style="width:600px">
+    <div id="app" style="width:full; height: full;">
         <p><button @click="displayGraph">グラフ表示</button></p>
-        <canvas id="myChart"></canvas>
+        <canvas id="myChart" style=" margin-left: auto; margin-right: auto; padding: 40px; "></canvas>
         <!-- <h1>{{timeWight}}</h1>
         <h2>Test2</h2>
         <h3>Test3</h3> -->
@@ -40,8 +40,56 @@
                             labels: this.time_array,
                             datasets: [{
                                 label: '実験データ',
-                                data: this.weight_array
+                                data: this.weight_array,
+                                tension: 0, // 折れ線の曲率
+                                backgroundColor: "rgba(153,255,51,0.4)"
                             }]
+                        },
+                        options: {
+                            title: {
+                                display: true,
+                                text: 'マルチコプターペイロード負荷試験',
+                            },
+                            scales: {
+                                xAxes: [{
+                                    display: true,
+                                    scaleLabel: {
+                                        display: true,
+                                        labelString: 'time',
+                                        fontFamily: 'monospace',
+                                        fontSize: 30
+                                    },
+                                    stacked: false,
+                                    gridLines: {
+                                        display: true    // 目盛を表示
+                                    },
+                                    ticks: {
+                                        reverse: false,  // 逆向き目盛
+                                        stepSize: 10, // メモリ間隔
+                                        min: 0, // 原点表示
+                                        // max: 50,
+                                        callback: function (value) { return ((value % 10) == 0) ? value : '' } // 10感覚でメモリを振る
+                                    }
+                                }],
+                                yAxes: [{
+                                    display: true,
+                                    scaleLabel: {
+                                        display: true,
+                                        labelString: 'weight',
+                                        fontFamily: 'monospace',
+                                        fontSize: 30
+                                    },
+                                    ticks: {
+                                        reverse: false,  // 逆向き目盛
+                                        stepSize: 1, // メモリ間隔
+                                        min: 0, // 原点表示
+                                        // max: 50,
+                                        callback: function (value) { return ((value % 10) == 0) ? value : '' }　// 10感覚でメモリを振る
+                                    }
+                                }]
+
+                            }
+
                         }
                     });
                 }
