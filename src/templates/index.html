@@ -12,16 +12,17 @@
     <!-- axios -->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <!-- Foundation -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.3.1/css/foundation.min.css">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.3.1/css/foundation.min.css"> -->
 </head>
 
 <body>
     <div id="app" style="width:full; height: full;">
         <p><button @click="displayGraph">グラフ表示</button></p>
         <canvas id="myChart" style=" margin-left: auto; margin-right: auto; padding: 20px; "></canvas>
-        <!-- <h1>{{timeWight}}</h1>
-        <h2>Test2</h2>
-        <h3>Test3</h3> -->
+        <!-- // v-on:change でファイルの選択を検知する -->
+        <!-- http://tech.aainc.co.jp/archives/10714 -->
+        <input @change="selectedFile" type="file" id="send_data" name="send_data">
+        <button @click="upload" type="submit">アップロード</button>
     </div>
     <script>
         var app = new Vue({
@@ -29,7 +30,8 @@
             data: {
                 timeWight: [],
                 time_array: [],
-                weight_array: []
+                weight_array: [],
+                uploadFile: null
             },
             methods: {
                 displayGraph: function () {
@@ -55,36 +57,43 @@
                                     display: true,
                                     scaleLabel: {
                                         display: true,
-                                        labelString: 'time',
+                                        labelString: 'time[ms]',
                                         fontFamily: 'monospace',
                                         fontSize: 14
                                     },
-                                    stacked: false,
-                                    gridLines: {
-                                        display: true    // 目盛を表示
-                                    },
+                                    // stacked: false,
+                                    // gridLines: {
+                                    //     display: true    // 目盛を表示
+                                    // },
                                     ticks: {
+                                        beginAtZero: true,
                                         reverse: false,  // 逆向き目盛
-                                        stepSize: 10, // メモリ間隔
+                                        stepSize: 1000, // メモリ間隔
                                         min: 0, // 原点表示
+                                        maxTrickLimit: 1000,
                                         // max: 50,
-                                        callback: function (value) { return ((value % 10) == 0) ? value : '' } // 10感覚でメモリを振る
+                                        // callback: function (label, index, labels) {
+                                        //     return label
+                                        //         ;
+                                        // } // 10感覚でメモリを振る
                                     }
                                 }],
                                 yAxes: [{
                                     display: true,
                                     scaleLabel: {
                                         display: true,
-                                        labelString: 'weight',
+                                        labelString: 'weight[g]',
                                         fontFamily: 'monospace',
                                         fontSize: 14
                                     },
                                     ticks: {
+                                        beginAtZero: true,
                                         reverse: false,  // 逆向き目盛
-                                        stepSize: 1, // メモリ間隔
+                                        stepSize: 1000, // メモリ間隔
                                         min: 0, // 原点表示
+                                        // maxTrickLimit: 1000
                                         // max: 50,
-                                        callback: function (value) { return ((value % 10) == 0) ? value : '' }　// 10感覚でメモリを振る
+                                        // callback: function (value) { return ((value % 10) == 0) ? value : '' }　// 10感覚でメモリを振る
                                     }
                                 }]
 
@@ -92,7 +101,31 @@
 
                         }
                     });
-                }
+                },
+                selectedFile: function (e) {
+                    // 選択された File の情報を保存しておく
+                    e.preventDefault();
+                    let files = e.target.files || e.dataTransfer.files;
+                    this.uploadFile = files[0];
+                },
+                upload: function () {
+                    // FormData を利用して File を POST する
+                    let formData = new FormData();
+                    formData.append('send_data', this.uploadFile);
+                    let config = {
+                        headers: {
+                            'content-type': 'multipart/form-data'
+                        }
+                    };
+                    axios
+                        .post('api/getcsv', formData, config)
+                        .then(function (response) {
+                            // response 処理
+                        })
+                        .catch(function (error) {
+                            // error 処理
+                        })
+                },
             },
             mounted: function () {
                 axios
